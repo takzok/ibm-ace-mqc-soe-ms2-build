@@ -1,12 +1,49 @@
-apiVersion: serving.knative.dev/v1alpha1
-kind: Service
+kind: DeploymentConfig
+apiVersion: apps.openshift.io/v1
 metadata:
-  name: ibmaceda
-  namespace: default
+  name: tt-ibm-ace-mqc-soe-ms2-build
+  namespace: da-build-project
 spec:
-  runLatest:
-    configuration:
-      revisionTemplate:
-        spec:
-          container:
-            image: __IMAGE__
+    - type: ConfigChange
+    - type: ImageChange
+      imageChangeParams:
+        automatic: true
+        containerNames:
+          - ibm-ace-mqc-soe-ms2-build
+        from:
+          kind: ImageStreamTag
+          namespace: da-build-project
+          name: 'ibm-ace-mqc-soe-ms2-build:latest'
+        lastTriggeredImage: >-
+          image-registry.openshift-image-registry.svc:5000/da-build-project/ibm-ace-mqc-soe-ms2-build@sha256:3bc0ee0d21fbc2a1e6297956f814495e5056c8d2a183c48d1c4ca119ee06d381
+  replicas: 1
+  selector:
+    app: tt-ibm-ace-mqc-soe-ms2-build
+    deploymentconfig: ibm-ace-mqc-soe-ms2-build
+  template:
+    metadata:
+      labels:
+        app: tt-ibm-ace-mqc-soe-ms2-build
+        deploymentconfig: ibm-ace-mqc-soe-ms2-build
+    spec:
+      containers:
+        - name: ibm-ace-mqc-soe-ms2-build
+          image: >-
+            __IMAGE__
+          ports:
+            - containerPort: 7600
+              protocol: TCP
+            - containerPort: 7800
+              protocol: TCP
+          env:
+            - name: LICENSE
+              value: accept
+          resources: {}
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+          imagePullPolicy: Always
+      restartPolicy: Always
+      terminationGracePeriodSeconds: 30
+      dnsPolicy: ClusterFirst
+      securityContext: {}
+      schedulerName: default-scheduler
