@@ -4,18 +4,6 @@ metadata:
   name: tt-ibm-ace-mqc-soe-ms2-build
   namespace: da-build-project
 spec:
-    - type: ConfigChange
-    - type: ImageChange
-      imageChangeParams:
-        automatic: true
-        containerNames:
-          - ibm-ace-mqc-soe-ms2-build
-        from:
-          kind: ImageStreamTag
-          namespace: da-build-project
-          name: 'ibm-ace-mqc-soe-ms2-build:latest'
-        lastTriggeredImage: >-
-          image-registry.openshift-image-registry.svc:5000/da-build-project/ibm-ace-mqc-soe-ms2-build@sha256:3bc0ee0d21fbc2a1e6297956f814495e5056c8d2a183c48d1c4ca119ee06d381
   replicas: 1
   selector:
     app: tt-ibm-ace-mqc-soe-ms2-build
