@@ -4,6 +4,7 @@ ENV BAR1=Microservice2.bar
 
 # Copy in the bar file to a temporary directory
 COPY --chown=aceuser ./acesoe/binary/$BAR1 /tmp
+# DA switch to and from root if using Kaniko build
 USER root
 # Unzip the BAR file; need to use bash to make the profile work
 RUN bash -c 'mqsibar -w /home/aceuser/ace-server -a /tmp/$BAR1 -c'
